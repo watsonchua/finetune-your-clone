@@ -1,0 +1,22 @@
+# general
+fire
+tqdm
+dotenv
+
+# preprocessing
+whatstk
+pandas
+
+# finetuning
+torch
+transformers
+peft
+sentencepiece
+protobuf
+
+# inference
+fastapi
+
+# app
+gradio_client
+python-telegram-bot
