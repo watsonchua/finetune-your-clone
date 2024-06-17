@@ -13,6 +13,7 @@ transformers
 peft
 sentencepiece
 protobuf
+accelerate
 
 # inference
 fastapi
