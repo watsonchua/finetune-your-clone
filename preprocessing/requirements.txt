@@ -1,4 +1,4 @@
-fire==0.60
+fire==0.6.0
 tqdm==4.66.4
 whatstk==0.6.2
 pandas==1.5.3
