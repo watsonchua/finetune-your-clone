@@ -26,7 +26,7 @@ bnb_config = BitsAndBytesConfig(
 
 
 base_model = AutoModelForCausalLM.from_pretrained(
-    pretrained_model_name_or_path=base_model_id
+    pretrained_model_name_or_path=base_model_id,
     quantization_config=bnb_config,  
     trust_remote_code=True,
     token=True
@@ -74,10 +74,10 @@ app = FastAPI()
 
 class CompletionQuery(BaseModel):
     prompt: str = "Hello how are you?"
-    temperature: float = 0.5,
-    max_new_tokens=100,
-    repetition_penalty=1.15
-    custom_stop_tokens=["<|eot_id|>"]
+    temperature: float = 0.5
+    max_new_tokens: int = 100
+    repetition_penalty: float = 1.15
+    custom_stop_tokens: List[str] = ["<|eot_id|>"]
 
 
 
