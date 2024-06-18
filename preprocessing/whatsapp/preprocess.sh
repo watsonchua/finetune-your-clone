@@ -1,2 +1,2 @@
 # python batch_process_whatsapp.py --input_path [path_to_whatsapp_zip_files] --output_path [path_to_write_consolidated_files]
-python batch_process_whatsapp.py --input_path "../../data/whatsapp" --output_path "../../data/whatsapp/test_consolidated.jsonl"
+python batch_process_whatsapp.py --input_path "../../data/whatsapp" --output_path "../../data/whatsapp/consolidated_wa_finetune.jsonl"
