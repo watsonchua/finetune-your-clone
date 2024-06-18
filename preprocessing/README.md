@@ -1,3 +1,6 @@
+
+This README file is specifically for preprocessing the data.
+
 Setting up the enviroment
 
 1. Create a new virtual environment for preprocessing using the command `python3 -m venv path_to_your_env`. E.g. `python3 -m venv ~/environments/finetune-preprocessing`

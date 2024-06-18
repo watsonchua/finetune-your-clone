@@ -1,4 +1,5 @@
 .env
-data/
+data/finetuned_models/*
+data/whatsapp/*
 **__pycache__**
 *.pyc
