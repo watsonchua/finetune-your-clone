@@ -1,4 +1,4 @@
-# reference: https://github.com/brevdev/notebooks/blob/main/mistral-finetune-own-data.ipynb
+# Reference: https://github.com/brevdev/notebooks/blob/main/mistral-finetune-own-data.ipynb
 
 
 from datasets import load_dataset
@@ -7,10 +7,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from peft import prepare_model_for_kbit_training, LoraConfig, get_peft_model
 from accelerate import FullyShardedDataParallelPlugin, Accelerator
 from torch.distributed.fsdp.fully_sharded_data_parallel import FullOptimStateDictConfig, FullStateDictConfig
-# import wandb
-import os
 import transformers
-from datetime import datetime
 from fire import Fire
 
 def print_trainable_parameters(model):
@@ -34,21 +31,16 @@ def main(
         train_dataset_path,
         output_dir,
         eval_dataset_path=None,
-        model_path=None,
         base_model_id="mistralai/Mistral-7B-v0.1",
-        # project="im8-clauses-qa-finetune",
-        # base_model_name="mistral",
-        max_length=512,
+        max_length=5500,
         lora_r=32,
         lora_alpha=64,
         lora_dropout=0.05,
-        batch_size=32,
-        epochs=10,
-        gradient_accumulation_steps=1
+        batch_size=1,
+        epochs=5,
+        gradient_accumulation_steps=8
 ):
-    
-    # run_name = base_model_name + "-" + project
-
+    # Load model for 4-bit quantization
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
         bnb_4bit_use_double_quant=True,
@@ -56,43 +48,26 @@ def main(
         bnb_4bit_compute_dtype=torch.bfloat16
     )
 
-    # wandb.login()
-
-    # wandb_project = "im-finetune"
-    # if len(wandb_project) > 0:
-    #     os.environ["WANDB_PROJECT"] = wandb_project
-
-    
-    
     train_dataset = load_dataset('json', data_files=train_dataset_path, split='train')
     eval_dataset = load_dataset('json', data_files=eval_dataset_path, split='train') if eval_dataset_path is not None else None
     
-    if model_path is not None:        
-        model = AutoModelForCausalLM.from_pretrained(model_path, quantization_config=bnb_config)
-    else:
-        model = AutoModelForCausalLM.from_pretrained(base_model_id, quantization_config=bnb_config)
 
+    model = AutoModelForCausalLM.from_pretrained(base_model_id, quantization_config=bnb_config)
+
+    # The tokenizer has been configured to add the BOS and EOS tokens. We do not have to add them in our inputs anymore.
     tokenizer = AutoTokenizer.from_pretrained(
         base_model_id,
         padding_side="left",
         add_eos_token=True,
         add_bos_token=True,
     )
-    # tokenizer.pad_token = tokenizer.eos_token
+
+    # Use the unknown token for padding
     tokenizer.pad_token = tokenizer.unk_token
 
-
-
-    def formatting_func(example):
-    # text = f"### Question: {example['input']}\n ### Answer: {example['output']}"
-    # return text
-            # return tokenizer.bos_token + example['input'] + tokenizer.eos_token
-        return example['input'] # bos_token and eos_token are already added by tokenizer
-
-
-    def generate_and_tokenize_prompt(prompt):
+    def generate_and_tokenize_prompt(example):
             result = tokenizer(
-                formatting_func(prompt),
+                example['input']
                 truncation=True,
                 max_length=max_length,
                 padding="max_length",
@@ -114,6 +89,7 @@ def main(
     config = LoraConfig(
         r=lora_r,
         lora_alpha=lora_alpha,
+        # target modules for lora specific to mistral
         target_modules=[
             "q_proj",
             "k_proj",
@@ -125,7 +101,7 @@ def main(
             "lm_head",
         ],
         bias="none",
-        lora_dropout=lora_dropout,  # Conventional
+        lora_dropout=lora_dropout,
         task_type="CAUSAL_LM",
     )
 
@@ -141,8 +117,7 @@ def main(
     accelerator = Accelerator(fsdp_plugin=fsdp_plugin)
     model = accelerator.prepare_model(model)
 
-
-    if torch.cuda.device_count() > 1: # If more than 1 GPU
+    if torch.cuda.device_count() > 1: 
         model.is_parallelizable = True
         model.model_parallel = True
 
@@ -157,26 +132,19 @@ def main(
             per_device_train_batch_size=batch_size,
             gradient_accumulation_steps=gradient_accumulation_steps,
             gradient_checkpointing=True,
-            # max_steps=1000,
             num_train_epochs=epochs,
-            learning_rate=2.5e-5, # Want a small lr for finetuning
+            learning_rate=2.5e-5,
             bf16=True,
             optim="paged_adamw_8bit",
-            logging_steps=100,              # When to start reporting loss
-            logging_dir="./logs",        # Directory for storing logs
-            save_strategy="epoch",       # Save the model checkpoint every logging step
-            # save_steps=100,                # Save checkpoints every 50 steps
-            # evaluation_strategy="steps" if tokenized_val_dataset is not None else None, # Evaluate the model every logging step
-            # eval_steps=100 if tokenized_val_dataset is not None else None,               # Evaluate and save checkpoints every 50 steps
-            # do_eval=True if tokenized_val_dataset is not None else False,                # Perform evaluation at the end of training
-            # report_to="wandb",           # Comment this out if you don't want to use weights & baises
+            logging_steps=100,              
+            logging_dir="./logs",       
+            save_strategy="epoch", 
             report_to="none",
-            # run_name=f"{run_name}-{datetime.now().strftime('%Y-%m-%d-%H-%M')}"          # Name of the W&B run (optional)
         ),
         data_collator=transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False),
     )
 
-    model.config.use_cache = False  # silence the warnings. Please re-enable for inference!
+    model.config.use_cache = False 
     trainer.train()
     trainer.save_model()
 
