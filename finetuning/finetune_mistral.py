@@ -31,7 +31,7 @@ def main(
         train_dataset_path,
         output_dir,
         eval_dataset_path=None,
-        base_model_id="mistralai/Mistral-7B-v0.1",
+        base_model_id="alpindale/Mistral-7B-v0.2-hf",
         max_length=5500,
         lora_r=32,
         lora_alpha=64,
@@ -67,7 +67,7 @@ def main(
 
     def generate_and_tokenize_prompt(example):
             result = tokenizer(
-                example['input']
+                example['input'], # data is just the text in the input field of the json line
                 truncation=True,
                 max_length=max_length,
                 padding="max_length",
@@ -77,6 +77,7 @@ def main(
 
 
     tokenized_train_dataset = train_dataset.map(generate_and_tokenize_prompt)
+    # we are not using a validation dataset for now
     tokenized_val_dataset = eval_dataset.map(generate_and_tokenize_prompt) if eval_dataset is not None else None
 
 
