@@ -1,0 +1,5 @@
+fire==0.60
+tqdm==4.66.4
+whatstk==0.6.2
+pandas==1.5.3
+transformers==4.41.2
