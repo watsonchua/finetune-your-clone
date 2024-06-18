@@ -1,12 +1,1 @@
-python generate_mistral.py --base_model_id="alpindale/Mistral-7B-v0.2-hf" \
---lora_weights="data/mistral-7b-0.2-base-wa-friends-family" \
---max_new_tokens=200 \
---repetition_penalty=1.15 \
---temperature=0.7 \
---gradio=True \
---gradio_port=8080 \
---format_prompt=False \
---truncate_prompt=True \
---fastapi=False \
---quantize=True \
---custom_stop_tokens="<|eot_id|>"
+base_model_id="alpindale/Mistral-7B-v0.2-hf" lora_weights="/home/watson_chua/finetuned_models/mistral-7b-0.2-base-wa-friends-family" CUDA_VISIBLE_DEVICES=1 uvicorn generate_mistral:app --port 8503 --host 0.0.0.0 --reload
