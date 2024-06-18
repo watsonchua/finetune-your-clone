@@ -51,7 +51,7 @@ print(ft_model)
 
 
 
-def generate(eval_prompt, temperature, repetition_penalty, custom_stop_tokens, max_new_tokens):        
+def generate_with_model(eval_prompt, temperature, repetition_penalty, custom_stop_tokens, max_new_tokens):        
     model_input = eval_tokenizer(eval_prompt, return_tensors="pt").to(device)
 
     with torch.no_grad():
@@ -77,7 +77,7 @@ class CompletionQuery(BaseModel):
     temperature: float = 0.5
     max_new_tokens: int = 100
     repetition_penalty: float = 1.15
-    custom_stop_tokens: List[str] = ["<|eot_id|>"]
+    custom_stop_tokens: str = "<|eot_id|>"
 
 
 
@@ -87,51 +87,5 @@ async def root():
 
 @app.post("/generate/")
 async def generate(query: CompletionQuery):    
-    response = generate(eval_prompt=query.prompt, temperature=query.temperature, repetition_penalty=query.repetition_penalty, custom_stop_tokens=query.custom_stop_tokens, max_new_tokens=query.max_new_tokens)
-    return response
-
-
-
-
-    
-    
-    
-    
-
-
-    
-    if not gradio:
-        while True:
-            eval_prompt = input("Enter prompt:")
-            if not eval_prompt.strip():
-                break
-
-            response = generate(eval_prompt, temperature, max_new_tokens)
-            print(response)
-    
-        
-    else:
-        # use gradio interface
-        import gradio as gr
-        
-        demo = gr.Interface(
-            fn=generate,
-            inputs=[
-                    gr.Textbox(label="Question", placeholder="What do I do in the event of a security incident?"),
-                    gr.Slider(0.01, 1.0, value=0.01, label="Temperature"),
-                    gr.Slider(100, max_new_tokens if max_new_tokens>100 else 400, value=100, label="Max Output Tokens"),
-                    # gr.Slider(50,400,value=100,label="Repetition Penalty"),                
-            ],
-
-            outputs=[gr.Textbox(label="Answer")],
-            allow_flagging="never",
-        )
-
-        demo.launch(server_name="0.0.0.0", server_port=gradio_port)
-
-        
-      
-
-
-if __name__ == "__main__":
-    Fire(main)
+    response = generate_with_model(eval_prompt=query.prompt, temperature=query.temperature, repetition_penalty=query.repetition_penalty, custom_stop_tokens=query.custom_stop_tokens, max_new_tokens=query.max_new_tokens)
+    return {"generated_text": response}

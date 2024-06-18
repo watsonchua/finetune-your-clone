@@ -3,15 +3,16 @@ import os
 from telegram import Update
 from telegram.ext import filters, ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler
 from transformers import AutoTokenizer
-from gradio_client import Client
+# from gradio_client import Client
 from dotenv import load_dotenv
+import requests
 
 load_dotenv()
 
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 
-
-client = Client("https://capdev.govtext.gov.sg:9092/")
+generate_url = "https://capdev.govtext.gov.sg:9092/generate/"
+# client = Client("https://capdev.govtext.gov.sg:9092/")
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -59,20 +60,40 @@ def format_query(history, message):
 
     return "".join(formatted_messages_list) + "<start_header_id>system<end_header_id>"
 
-    
-
 
 def get_reply_from_chatbot(message, history):
 
     query_formatted = format_query(history, message)
     # print(query_formatted)
 
-    result = client.predict(
-		eval_prompt=query_formatted,
-		temperature=0.7,
-		max_new_tokens=100,
-		api_name="/predict"
-    )
+    # using gradio client
+    # result = client.predict(
+	# 	eval_prompt=query_formatted,
+	# 	temperature=0.7,
+	# 	max_new_tokens=100,
+	# 	api_name="/predict"
+    # )
+
+
+    # using fastapi
+    headers = {
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
+    }
+
+    json_data = {
+        'prompt': query_formatted,
+        'temperature': 0.7,
+        'max_new_tokens': 100,
+        'repetition_penalty': 1.15,
+        'custom_stop_tokens': '<|eot_id|>',
+    }
+
+    response = requests.post(generate_url, headers=headers, json=json_data)
+    if response.status_code == 200:
+        result = response.json()['generated_text']
+    else:
+        return response.json()
     
     # find the last generated message
     response_str = result.split("<start_header_id>system<end_header_id>")[-1]
