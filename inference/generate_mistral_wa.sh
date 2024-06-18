@@ -1,1 +1,1 @@
-base_model_id="alpindale/Mistral-7B-v0.2-hf" lora_weights="/home/watson_chua/finetuned_models/mistral-7b-0.2-base-wa-friends-family" CUDA_VISIBLE_DEVICES=1 uvicorn generate_mistral:app --port 9092 --host 0.0.0.0 --reload
+base_model_id="alpindale/Mistral-7B-v0.2-hf" lora_weights="/home/watson_chua/finetuned_models/mistral-7b-0.2-base-wa-friends-family" CUDA_VISIBLE_DEVICES=2 uvicorn generate_mistral:app --port 9092 --host 0.0.0.0 --reload
