@@ -1,0 +1,11 @@
+transformers==4.41.2
+tqdm==4.66.4
+fire==0.6.0
+accelerate==0.31.0
+peft==0.11.1
+bitsandbytes===0.42.0
+torch==2.1.2
+datasets==2.20.0
+protobuf==5.27.1
+sentencepiece==0.2.0
+fastapi==0.111.0
