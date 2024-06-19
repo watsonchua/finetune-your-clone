@@ -12,4 +12,4 @@ This README file is specifically for finetuning the model.
 ## Finetuning
 
 1. If you are doing the finetuning on a different machine from the preprocessing one, copy the jsonl file generated previously and put it in `finetune-your-clone/data/whatsapp/`.
-2. Run the bash script `bash finetune.sh`. The model will start finetuning and the model will be saved in `finetune-your-clone/data/finetuned_models/my_whatsapp_clone`. You can change the output model name and the training parameters.
+2. Run the bash script `bash finetune.sh`. The model will start finetuning and the model will be saved in `finetune-your-clone/data/finetuned_models/my_whatsapp_clone`. You can change the output model name and the training parameters. **IMPORTANT**: If you are finetuning on a T4 instance which does not support bf16, set the `use_bf16` to `False`.
