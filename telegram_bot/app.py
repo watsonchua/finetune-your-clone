@@ -110,15 +110,6 @@ async def clear(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="Goodbye!")
 
-async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_id = update.effective_chat.id
-    print(context)
-    received =  'User: ' + update.message.text
-    response = 'Bot: ' + update.message.text
-    user_sessions[user_id] = user_sessions[user_id] + [received + '\n' + response]
-    await context.bot.send_message(chat_id=update.effective_chat.id, text='\n'.join(user_sessions[user_id]))
-
-
 async def talk_to_llm(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_chat.id
     history = user_sessions[user_id]
@@ -136,7 +127,6 @@ if __name__ == '__main__':
     start_handler = CommandHandler('start', start)
     clear_handler = CommandHandler('clear', clear)
     stop_handler = CommandHandler('stop', stop)
-    # echo_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), echo)
     llm_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), talk_to_llm)
     unknown_handler = MessageHandler(filters.COMMAND, unknown)
 
