@@ -38,7 +38,8 @@ def main(
         lora_dropout=0.05,
         batch_size=1,
         epochs=5,
-        gradient_accumulation_steps=8
+        gradient_accumulation_steps=8,
+        use_bf16=True
 ):
     # Load model for 4-bit quantization
     bnb_config = BitsAndBytesConfig(
@@ -135,7 +136,7 @@ def main(
             gradient_checkpointing=True,
             num_train_epochs=epochs,
             learning_rate=2.5e-5,
-            bf16=True,
+            bf16=use_bf16,
             optim="paged_adamw_8bit",
             logging_steps=100,              
             logging_dir="./logs",       

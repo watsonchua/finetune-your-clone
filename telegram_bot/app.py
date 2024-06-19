@@ -23,7 +23,7 @@ user_sessions = {}
 base_model_id = "alpindale/Mistral-7B-v0.2-hf"
 eval_tokenizer = AutoTokenizer.from_pretrained(base_model_id, add_bos_token=True, add_special_tokens=False, trust_remote_code=True, use_fast=True)
 prompt_template = "<start_header_id>{role}<end_header_id>{message}<|eot_id|>"
-input_max_length = 5500
+input_max_length = 3000
 
 def get_encoded_length(text):
     encoded = eval_tokenizer.encode(text)
