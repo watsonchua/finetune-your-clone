@@ -1,15 +1,19 @@
 # Finetuning your Clone - Building Your Own Bot Trained on Your WhatsApp Messages
 
-Would you like to create a Telegram bot which can talk like you? If so, you have come to the right repo! You can find the code to finetune your own LLM on your WhatsApp conversations, serve it, and build a Telegram Bot for it here!
+Would you like to create a Telegram bot which can talk like you? 
 
-This repo is split into four sections: preprocessing, finetuning, inference, and telegram_bot, each with its own README file and requirements.txt. You can use a single machine and virtual environment to run all four steps but I wouldn't recommend that, as the resource requirements for each step is different. I used the following set-up where a high GPU memory machine is used for finetuning, a low GPU memory machine for inference, and CPU only machines for preprocessing and hosting the Telegram bot.
+If so, you have come to the right repo! You can find the code to finetune your own LLM on your WhatsApp conversations, serve it, and build a Telegram Bot for it here!
+
+This repo is split into four sections: [preprocessing](preprocessing), [finetuning](finetuning), [inference](inference), and [telegram_bot](telegram_bot), each with its own README file and requirements.txt. 
+
+You can use a single machine and virtual environment to run all four steps but I wouldn't recommend that, as the resource requirements for each step is different. I used the following set-up where a high GPU memory machine is used for finetuning, a low GPU memory machine for inference, and CPU only machines for preprocessing and hosting the Telegram bot.
 
 ![Different Machines for Each Step](hosting.png)
 
-# Preprocessing Data
+## Preprocessing Data
 The first thing you need to do is to export your WhatsApp messages and preprocess the data into a file which can be used for LLM training. Follow the [README file in the preprocessing folder](preprocessing/README.md) to do this. At the end of this step, you will get a `jsonl` file which is a consolidation of your WhatsApp chats, formatted for LLM training, in the format `<start_header_id>system<end_header_id>your_message<|eot_id|><start_header_id>user<end_header_id>your_friends_message<|eot_id|>`. This can be done on a CPU-only machine.
 
-# Finetuning
+## Finetuning
 This step requires a machine which has a GPU with at least 20GB GPU RAM and supports bfloat training (e.g. A100 40GB). Copy the training file generated from the previous step to this machine by following the steps in the [README file in the finetuning folder](finetuning/README.md).
 
 Finetuning is done using 4-bit QLoRA on a [Mistral-7B-v0.2 base model](https://huggingface.co/mistral-community/Mistral-7B-v0.2), with the following settings:
@@ -26,12 +30,12 @@ At the end of this step, you will get the LoRA adapters which consists of three 
 - `adapter_model.safetensors`
 - `training_args.bin`
 
-# Hosting Model for Inference
+## Hosting Finetuned Model for Inference
 This step requires a machine which has a GPU with at least 8GB GPU RAM (e.g. T4). Copy the adapter files over to this machine and follow the steps in the [README file in the inference folder](inference/README.md) to deploy your model as a FastAPI service.
 
 At the end of this step, you will have a FastAPI service deployed at `http://your_url:your_port_no/generate` e.g. `http://localhost:8080/generate/`
 
-# Building the Telegram Bot
+## Building the Telegram Bot
 Deployment of your Telegram Bot requires only a small machine with a single CPU and 4GB RAM. Follow the steps in the [README file in the telegram_bot folder](telegram_bot/README.md) to deploy your telegram_bot.
 
 
