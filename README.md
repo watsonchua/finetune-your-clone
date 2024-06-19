@@ -40,3 +40,11 @@ Deployment of your Telegram Bot requires only a small machine with a single CPU 
 
 
 That's all! You now have a Telegram bot which talks like you!
+
+
+## References
+
+Reference was made to the following notebooks:
+- [WhatsApp data preprocessing](https://colab.research.google.com/drive/1Xf_FoKMxKd-RHdo4mPNVpTu__8tCGRgB#scrollTo=dYnFubkFJDEm) from [Daniel Pleus](https://www.linkedin.com/in/daniel-pleus/). Blog post [here](https://www.linkedin.com/pulse/building-chatbot-fine-tune-llms-whatsapp-data-daniel-pleus/).
+- [Finetuning](https://github.com/brevdev/notebooks/blob/main/mistral-finetune-own-data.ipynb) from [Brev.dev](https://github.com/brevdev)
+
