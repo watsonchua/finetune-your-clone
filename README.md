@@ -6,9 +6,14 @@ If so, you have come to the right repo! You can find the code to finetune your o
 
 This repo is split into four sections: [preprocessing](preprocessing), [finetuning](finetuning), [inference](inference), and [telegram_bot](telegram_bot), each with its own README file and requirements.txt. 
 
-You can use a single machine and virtual environment to run all four steps but I wouldn't recommend that, as the resource requirements for each step is different. I used the following set-up where a high GPU memory machine is used for finetuning, a low GPU memory machine for inference, and CPU only machines for preprocessing and hosting the Telegram bot.
+You can use a single machine and virtual environment to run all four steps as follows:
+![Single Machine Set-up](image.png)
+If you are doing a single machine set-up, you will just need a single virtual environment to install the dependecies from the different `requirements.txt` files.
 
-![Overall Set-up](overall.png)
+
+Alternatively, you can use the following set-up like me where a high GPU memory machine is used for finetuning, a low GPU memory machine for inference, and CPU only machines for preprocessing and hosting the Telegram bot. This provides better resource allocation as I can finetune faster on the A100 instance. The downside is that you would have to move files around and set up different virtual environments for each step.
+
+![Multi-Machine Set-up](overall.png)
 
 ## Preprocessing Data
 The first thing you need to do is to export your WhatsApp messages and preprocess the data into a file which can be used for LLM training. Follow the [README file in the preprocessing folder](preprocessing/README.md) to do this. At the end of this step, you will get a `jsonl` file which is a consolidation of your WhatsApp chats, formatted for LLM training, in the format `<start_header_id>system<end_header_id>your_message<|eot_id|><start_header_id>user<end_header_id>your_friends_message<|eot_id|>`. This can be done on a CPU-only machine.
