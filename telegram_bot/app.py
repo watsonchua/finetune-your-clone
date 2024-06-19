@@ -10,9 +10,7 @@ import requests
 load_dotenv()
 
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
-
-generate_url = "https://capdev.govtext.gov.sg:9092/generate/"
-# client = Client("https://capdev.govtext.gov.sg:9092/")
+GENERATE_URL = os.getenv('GENERATE_URL')
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -64,16 +62,6 @@ def format_query(history, message):
 def get_reply_from_chatbot(message, history):
 
     query_formatted = format_query(history, message)
-    # print(query_formatted)
-
-    # using gradio client
-    # result = client.predict(
-	# 	eval_prompt=query_formatted,
-	# 	temperature=0.7,
-	# 	max_new_tokens=100,
-	# 	api_name="/predict"
-    # )
-
 
     # using fastapi
     headers = {
@@ -89,7 +77,7 @@ def get_reply_from_chatbot(message, history):
         'custom_stop_tokens': '<|eot_id|>',
     }
 
-    response = requests.post(generate_url, headers=headers, json=json_data)
+    response = requests.post(GENERATE_URL, headers=headers, json=json_data)
     if response.status_code == 200:
         result = response.json()['generated_text']
     else:
