@@ -18,7 +18,7 @@ Alternatively, you can use the following set-up like me where a high GPU memory 
 The first thing you need to do is to export your WhatsApp messages and preprocess the data into a file which can be used for LLM training. Follow the [README file in the preprocessing folder](preprocessing/README.md) to do this. At the end of this step, you will get a `jsonl` file which is a consolidation of your WhatsApp chats, formatted for LLM training, in the format `<start_header_id>system<end_header_id>your_message<|eot_id|><start_header_id>user<end_header_id>your_friends_message<|eot_id|>`. This can be done on a CPU-only machine.
 
 ## Finetuning
-This step requires a machine which has a GPU with at least 20GB GPU RAM and supports bfloat training (e.g. A10 24GB). Copy the training file generated from the previous step to this machine by following the steps in the [README file in the finetuning folder](finetuning/README.md).
+This step requires a machine which has a GPU with at least 16GB GPU RAM and supports bfloat training (e.g. A10 24GB). Copy the training file generated from the previous step to this machine by following the steps in the [README file in the finetuning folder](finetuning/README.md).
 
 Finetuning is done using 4-bit QLoRA on a [Mistral-7B-v0.2 base model](https://huggingface.co/mistral-community/Mistral-7B-v0.2), with the following settings:
 - `max_length`=3000
