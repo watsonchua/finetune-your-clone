@@ -37,7 +37,7 @@ At the end of this step, you will get the LoRA adapters which consists of three 
 ## Hosting Finetuned Model for Inference
 This step requires a machine which has a GPU with at least 8GB GPU RAM (e.g. T4). Copy the adapter files over to this machine and follow the steps in the [README file in the inference folder](inference/README.md) to deploy your model as a FastAPI service.
 
-At the end of this step, you will have a FastAPI service deployed at `http://your_url:your_port_no/generate` e.g. `http://localhost:8080/generate/`
+At the end of this step, you will have a FastAPI service deployed at `http://your_url:your_port_no/generate` e.g. `http://localhost:9092/generate/`
 
 ## Building the Telegram Bot
 Deployment of your Telegram Bot requires only a small machine with a single CPU and 4GB RAM. Follow the steps in the [README file in the telegram_bot folder](telegram_bot/README.md) to deploy your telegram_bot.
