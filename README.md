@@ -17,7 +17,7 @@ The first thing you need to do is to export your WhatsApp messages and preproces
 This step requires a machine which has a GPU with at least 20GB GPU RAM and supports bfloat training (e.g. A100 40GB). Copy the training file generated from the previous step to this machine by following the steps in the [README file in the finetuning folder](finetuning/README.md).
 
 Finetuning is done using 4-bit QLoRA on a [Mistral-7B-v0.2 base model](https://huggingface.co/mistral-community/Mistral-7B-v0.2), with the following settings:
-- `max_length`=5500
+- `max_length`=3000
 - `lora_r`=32
 - `lora_alpha`=64
 - `lora_dropout`=0.05
