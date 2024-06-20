@@ -12,7 +12,7 @@ If you are doing a single machine set-up, you will just need a single virtual en
 
 
 Alternatively, you can use the following set-up like me where a high GPU memory machine is used for finetuning, a low GPU memory machine for inference, and CPU only machines for preprocessing and hosting the Telegram bot. This provides better resource allocation as I can finetune faster on the A100 instance. The downside is that you would have to move files around and set up different virtual environments for each step.
-![Multi-Machine Set-up](image.png)
+![Multi-Machine Set-up](multi-machine.png)
 
 ## Preprocessing Data
 The first thing you need to do is to export your WhatsApp messages and preprocess the data into a file which can be used for LLM training. Follow the [README file in the preprocessing folder](preprocessing/README.md) to do this. At the end of this step, you will get a `jsonl` file which is a consolidation of your WhatsApp chats, formatted for LLM training, in the format `<start_header_id>system<end_header_id>your_message<|eot_id|><start_header_id>user<end_header_id>your_friends_message<|eot_id|>`. This can be done on a CPU-only machine.
