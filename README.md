@@ -11,7 +11,7 @@ You can use a single machine and virtual environment to run all four steps as fo
 If you are doing a single machine set-up, you will just need a single virtual environment to install the dependecies from the different `requirements.txt` files.
 
 
-Alternatively, you can use the following set-up like me where a high GPU memory machine is used for finetuning, a low GPU memory machine for inference, and CPU only machines for preprocessing and hosting the Telegram bot. This provides better resource allocation as I can finetune faster on the A100 instance. The downside is that you would have to move files around and set up different virtual environments for each step.
+Alternatively, you can use the following set-up like me where a high GPU memory machine is used for finetuning, a low GPU memory machine for inference, and CPU only machines for preprocessing and hosting the Telegram bot. This provides better resource allocation as I can finetune faster on the A10 instance. The downside is that you would have to move files around and set up different virtual environments for each step.
 ![Multi-Machine Set-up](multi-machine.png)
 
 ## Preprocessing Data
