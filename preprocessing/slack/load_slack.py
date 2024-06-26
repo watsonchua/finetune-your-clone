@@ -13,7 +13,7 @@ from langchain_core.messages.ai import AIMessage
 import pandas as pd
 import json
 
-def preprocess_convo(input_path, output_path):
+def preprocess_convo(input_path, output_path, sender):
     loader = SlackChatLoader(
         path=input_path
     )
@@ -23,7 +23,7 @@ def preprocess_convo(input_path, output_path):
     merged_messages = merge_chat_runs(raw_messages)
     # Convert messages from "UMCH0973Q" to AI messages
     messages: List[ChatSession] = list(
-        map_ai_messages(merged_messages, sender="UMCH0973Q")
+        map_ai_messages(merged_messages, sender=sender)
     )
 
     query = []
@@ -83,4 +83,5 @@ if __name__ == "__main__":
     # Fire(preprocess_convo)
     input_path = "/mnt/c/Users/watso/Downloads/slackdump_Windows_x86_64/amelia/DM08UFH0A.zip"
     output_path = "/mnt/c/Users/watso/Downloads/slackdump_Windows_x86_64/amelia/DM08UFH0A.jsonl"
-    preprocess_convo(input_path, output_path)
+    sender = "UMCH0973Q"
+    preprocess_convo(input_path, output_path, sender)
